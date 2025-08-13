@@ -1,0 +1,27 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    font-family: 'Manrope', sans-serif;
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Quicksand', sans-serif;
+  }
+}
+
+@layer components {
+  .card-shadow {
+    @apply shadow-lg hover:shadow-xl transition-shadow duration-300;
+  }
+  
+  .gradient-bg {
+    background: linear-gradient(135deg, #003366 0%, #0056e6 100%);
+  }
+  
+  .gold-gradient {
+    background: linear-gradient(135deg, #FFD700 0%, #e6c200 100%);
+  }
+}
