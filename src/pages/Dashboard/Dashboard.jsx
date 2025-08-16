@@ -32,13 +32,6 @@ export default function Dashboard() {
       color: 'blue'
     },
     {
-      title: 'Compliance Status',
-      value: '89%',
-      subtitle: 'DPDP Act 2023',
-      icon: DocumentCheckIcon,
-      color: 'green'
-    },
-    {
       title: 'Active Datasets',
       value: '3',
       subtitle: '2 Processing, 1 Released',
@@ -83,7 +76,7 @@ export default function Dashboard() {
   };
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-10">
       {/* Header */}
       <motion.div
         initial={{ opacity: 0, y: -20 }}
@@ -94,69 +87,31 @@ export default function Dashboard() {
           SafeData Pipeline Dashboard
         </h1>
         <p className="text-gray-600">
-          Welcome back, {state.user?.name}. Here's your current pipeline overview.
+          Welcome back, SENTINALS. Here's your current pipeline overview.
         </p>
       </motion.div>
 
       {/* Stats Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        {stats.map((stat, index) => (
-          <motion.div
-            key={stat.title}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.3, delay: index * 0.1 }}
-          >
-            <StatCard {...stat} />
-          </motion.div>
-        ))}
-      </div>
-
-      {/* Main Content Grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        {/* Pipeline Status */}
-        <div className="lg:col-span-2">
-          <Card title="Pipeline Status & Timeline">
-            <StatusTimeline />
-          </Card>
-        </div>
-
-        {/* Notifications */}
-        <div>
-          <Card title="Recent Notifications">
-            <div className="space-y-4">
-              {notifications.map((notification) => (
-                <motion.div
-                  key={notification.id}
-                  initial={{ opacity: 0, x: 20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ duration: 0.3 }}
-                  className="flex space-x-3 p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors"
-                >
-                  <div className="flex-shrink-0 mt-1">
-                    {getNotificationIcon(notification.type)}
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <h4 className="text-sm font-semibold text-gray-900">
-                      {notification.title}
-                    </h4>
-                    <p className="text-sm text-gray-600 mt-1">
-                      {notification.message}
-                    </p>
-                    <p className="text-xs text-gray-500 mt-2">
-                      {new Date(notification.timestamp).toLocaleString('en-IN')}
-                    </p>
-                  </div>
-                </motion.div>
-              ))}
-            </div>
-          </Card>
-        </div>
-      </div>
+<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+  {stats.map((stat, index) => (
+    <motion.div
+      key={stat.title}
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.3, delay: index * 0.1 }}
+      className="h-full"
+    >
+      <StatCard
+        {...stat}
+        className="flex flex-col justify-center items-center text-center h-full p-6"
+      />
+    </motion.div>
+  ))}
+</div>
 
       {/* Quick Actions */}
       <Card title="Quick Actions">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           <motion.button
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
@@ -177,7 +132,7 @@ export default function Dashboard() {
             <DocumentCheckIcon className="h-8 w-8 text-gold-600" />
             <div className="text-left">
               <h3 className="font-semibold text-gray-900">Generate Report</h3>
-              <p className="text-sm text-gray-600">Export compliance report</p>
+              <p className="text-sm text-gray-600">Export Final Report</p>
             </div>
           </motion.button>
 
@@ -192,6 +147,41 @@ export default function Dashboard() {
               <p className="text-sm text-gray-600">User permissions & roles</p>
             </div>
           </motion.button>
+        </div>
+      </Card>
+
+      {/* Pipeline Status */}
+      <Card title="Pipeline Status & Timeline">
+        <StatusTimeline />
+      </Card>
+
+      {/* Notifications */}
+      <Card title="Recent Notifications">
+        <div className="space-y-4">
+          {notifications.map((notification) => (
+            <motion.div
+              key={notification.id}
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.3 }}
+              className="flex space-x-3 p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors"
+            >
+              <div className="flex-shrink-0 mt-1">
+                {getNotificationIcon(notification.type)}
+              </div>
+              <div className="flex-1 min-w-0">
+                <h4 className="text-sm font-semibold text-gray-900">
+                  {notification.title}
+                </h4>
+                <p className="text-sm text-gray-600 mt-1">
+                  {notification.message}
+                </p>
+                <p className="text-xs text-gray-500 mt-2">
+                  {new Date(notification.timestamp).toLocaleString('en-IN')}
+                </p>
+              </div>
+            </motion.div>
+          ))}
         </div>
       </Card>
     </div>

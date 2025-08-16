@@ -1,23 +1,24 @@
+// src/pages/PrivacyEnhancement/PrivacyEnhancement.jsx
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import Card from '../../components/Card';
 import { privacyEnhancementData } from '../../services/dummyPrivacyData';
-import { PRIVACY_METHODS } from '../../utils/constants';
-import { 
-  ShieldCheckIcon, 
-  EyeSlashIcon, 
-  Cog6ToothIcon,
+import {
+  ShieldCheckIcon,      // kept for styling options if needed
+  EyeSlashIcon,         // Differential Privacy
+  Cog6ToothIcon,        // Synthetic Data
   PlayIcon,
-  EyeIcon 
+  EyeIcon,
+  DocumentArrowDownIcon // for Generate Privacy Report
 } from '@heroicons/react/24/outline';
 
 export default function PrivacyEnhancement() {
-  const [selectedMethod, setSelectedMethod] = useState('SDC');
+  // Default to DIFFERENTIAL since SDC was removed
+  const [selectedMethod, setSelectedMethod] = useState('DIFFERENTIAL');
   const [showPreview, setShowPreview] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
 
   const methodIcons = {
-    SDC: ShieldCheckIcon,
     DIFFERENTIAL: EyeSlashIcon,
     SYNTHETIC: Cog6ToothIcon
   };
@@ -27,8 +28,36 @@ export default function PrivacyEnhancement() {
     setTimeout(() => {
       setIsProcessing(false);
       setShowPreview(true);
-      alert(`${PRIVACY_METHODS[selectedMethod]} applied successfully!`);
-    }, 2000);
+      const methodName = privacyEnhancementData.methods[selectedMethod].name;
+      alert(`${methodName} applied successfully!`);
+    }, 1500);
+  };
+
+  const handleGenerateReport = () => {
+    const method = privacyEnhancementData.methods[selectedMethod];
+    const report = {
+      module: 'Privacy Enhancement',
+      selectedMethod: method.name,
+      description: method.description,
+      techniques: method.techniques,
+      parameters: method.parameters,
+      previewSummary: {
+        originalSampleSize: privacyEnhancementData.preview.originalSample.length,
+        enhancedSampleSize: privacyEnhancementData.preview.enhancedSample.length,
+        notes: 'Dummy report generated on client for demo purposes.'
+      },
+      generatedAt: new Date().toISOString()
+    };
+
+    const blob = new Blob([JSON.stringify(report, null, 2)], {
+      type: 'application/json'
+    });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `privacy_report_${selectedMethod.toLowerCase()}_${Date.now()}.json`;
+    a.click();
+    URL.revokeObjectURL(url);
   };
 
   const renderMethodDetails = (methodKey) => {
@@ -42,24 +71,30 @@ export default function PrivacyEnhancement() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.3 }}
         className={`p-6 border-2 rounded-lg cursor-pointer transition-all duration-300 ${
-          selectedMethod === methodKey 
-            ? 'border-primary-500 bg-primary-50' 
+          selectedMethod === methodKey
+            ? 'border-primary-500 bg-primary-50'
             : 'border-gray-200 hover:border-gray-300'
         }`}
         onClick={() => setSelectedMethod(methodKey)}
       >
         <div className="flex items-start space-x-4">
-          <div className={`p-3 rounded-lg ${
-            selectedMethod === methodKey ? 'bg-primary-600' : 'bg-gray-100'
-          }`}>
-            <IconComponent className={`h-6 w-6 ${
-              selectedMethod === methodKey ? 'text-white' : 'text-gray-600'
-            }`} />
+          <div
+            className={`p-3 rounded-lg ${
+              selectedMethod === methodKey ? 'bg-primary-600' : 'bg-gray-100'
+            }`}
+          >
+            <IconComponent
+              className={`h-6 w-6 ${
+                selectedMethod === methodKey ? 'text-white' : 'text-gray-600'
+              }`}
+            />
           </div>
           <div className="flex-1">
-            <h3 className="text-lg font-semibold text-gray-900 mb-2">{method.name}</h3>
+            <h3 className="text-lg font-semibold text-gray-900 mb-2">
+              {method.name}
+            </h3>
             <p className="text-sm text-gray-600 mb-4">{method.description}</p>
-            
+
             {/* Techniques */}
             <div className="space-y-2">
               <h4 className="text-sm font-medium text-gray-700">Available Techniques:</h4>
@@ -70,9 +105,11 @@ export default function PrivacyEnhancement() {
                   </span>
                   <div className="flex items-center space-x-2">
                     <span className="text-xs text-gray-500">{technique.impact}</span>
-                    <div className={`w-3 h-3 rounded-full ${
-                      technique.applied ? 'bg-green-500' : 'bg-gray-300'
-                    }`} />
+                    <div
+                      className={`w-3 h-3 rounded-full ${
+                        technique.applied ? 'bg-green-500' : 'bg-gray-300'
+                      }`}
+                    />
                   </div>
                 </div>
               ))}
@@ -101,18 +138,23 @@ export default function PrivacyEnhancement() {
 
       {/* Method Selection */}
       <Card title="Select Privacy Enhancement Method">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {Object.keys(PRIVACY_METHODS).map((methodKey) => renderMethodDetails(methodKey))}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {Object.keys(privacyEnhancementData.methods).map((methodKey) =>
+            renderMethodDetails(methodKey)
+          )}
         </div>
       </Card>
 
       {/* Parameter Configuration */}
-      <Card title={`${PRIVACY_METHODS[selectedMethod]} Configuration`}>
+      <Card title={`${privacyEnhancementData.methods[selectedMethod].name} Configuration`}>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          {/* Parameters */}
           <div>
             <h3 className="text-lg font-semibold text-gray-900 mb-4">Parameters</h3>
             <div className="space-y-4">
-              {Object.entries(privacyEnhancementData.methods[selectedMethod].parameters).map(([param, value]) => (
+              {Object.entries(
+                privacyEnhancementData.methods[selectedMethod].parameters
+              ).map(([param, value]) => (
                 <div key={param}>
                   <label className="block text-sm font-medium text-gray-700 mb-1 capitalize">
                     {param.replace(/([A-Z])/g, ' $1').toLowerCase()}
@@ -125,8 +167,8 @@ export default function PrivacyEnhancement() {
                       defaultValue={value}
                       className="flex-1 h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
                     />
-                    <span className="text-sm font-medium text-gray-900 w-16 text-center">
-                      {value}
+                    <span className="text-sm font-medium text-gray-900 w-20 text-center truncate">
+                      {typeof value === 'number' ? value : String(value)}
                     </span>
                   </div>
                 </div>
@@ -134,6 +176,7 @@ export default function PrivacyEnhancement() {
             </div>
           </div>
 
+          {/* Impact Assessment */}
           <div>
             <h3 className="text-lg font-semibold text-gray-900 mb-4">Impact Assessment</h3>
             <div className="space-y-4">
@@ -162,7 +205,8 @@ export default function PrivacyEnhancement() {
           </div>
         </div>
 
-        <div className="mt-6 flex space-x-4">
+        {/* Actions */}
+        <div className="mt-6 flex flex-wrap gap-4">
           <motion.button
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
@@ -182,6 +226,17 @@ export default function PrivacyEnhancement() {
           >
             <EyeIcon className="h-5 w-5" />
             <span>{showPreview ? 'Hide Preview' : 'Show Preview'}</span>
+          </motion.button>
+
+          {/* ✅ Generate Privacy Report */}
+          <motion.button
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
+            onClick={handleGenerateReport}
+            className="flex items-center space-x-2 px-6 py-3 bg-gold-500 text-white font-semibold rounded-lg hover:bg-gold-600 transition-colors"
+          >
+            <DocumentArrowDownIcon className="h-5 w-5" />
+            <span>Generate Privacy Report</span>
           </motion.button>
         </div>
       </Card>
@@ -207,7 +262,9 @@ export default function PrivacyEnhancement() {
                     {privacyEnhancementData.preview.originalSample.map((row, index) => (
                       <tr key={index}>
                         <td className="px-4 py-2 text-sm text-gray-900">{row.age}</td>
-                        <td className="px-4 py-2 text-sm text-gray-900">{row.income.toLocaleString()}</td>
+                        <td className="px-4 py-2 text-sm text-gray-900">
+                          {row.income.toLocaleString()}
+                        </td>
                         <td className="px-4 py-2 text-sm text-gray-900">{row.education}</td>
                         <td className="px-4 py-2 text-sm text-gray-900">{row.zipcode}</td>
                       </tr>
@@ -252,7 +309,7 @@ export default function PrivacyEnhancement() {
                 <span className="font-medium text-blue-700">Age:</span> Generalized to ranges
               </div>
               <div>
-                <span className="font-medium text-blue-700">Income:</span> Rounded to brackets  
+                <span className="font-medium text-blue-700">Income:</span> Rounded to brackets
               </div>
               <div>
                 <span className="font-medium text-blue-700">Education:</span> Preserved exactly

@@ -9,7 +9,7 @@ const timelineData = [
     description: 'household_survey_2024.csv processed successfully',
     timestamp: '2024-01-15T10:30:00Z',
     status: 'completed',
-    user: 'Dr. Sarah Kumar'
+    user: 'SENTINAL'
   },
   {
     id: 2,
@@ -37,14 +37,6 @@ const timelineData = [
   },
   {
     id: 5,
-    title: 'Compliance Review',
-    description: 'DPDP Act 2023 compliance verification pending',
-    timestamp: null,
-    status: 'pending',
-    user: 'Legal Team'
-  },
-  {
-    id: 6,
     title: 'Data Release',
     description: 'Final approval and public release',
     timestamp: null,

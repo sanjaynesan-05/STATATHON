@@ -13,7 +13,6 @@ import Dashboard from '../pages/Dashboard/Dashboard';
 import RiskAssessment from '../pages/RiskAssessment/RiskAssessment';
 import PrivacyEnhancement from '../pages/PrivacyEnhancement/PrivacyEnhancement';
 import UtilityMeasurement from '../pages/UtilityMeasurement/UtilityMeasurement';
-import ReportingConfig from '../pages/ReportingConfiguration/ReportingConfig';
 import DataRelease from '../pages/DataRelease/DataRelease';
 import NotFound from '../pages/NotFound';
 
@@ -91,15 +90,6 @@ export default function AppRoutes() {
         element={
           <ProtectedRoute>
             <UtilityMeasurement />
-          </ProtectedRoute>
-        }
-      />
-      
-      <Route
-        path={ROUTES.REPORTING_CONFIG}
-        element={
-          <ProtectedRoute>
-            <ReportingConfig />
           </ProtectedRoute>
         }
       />

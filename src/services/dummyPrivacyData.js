@@ -1,19 +1,6 @@
+// src/services/dummyPrivacyData.js
 export const privacyEnhancementData = {
   methods: {
-    SDC: {
-      name: 'Statistical Disclosure Control',
-      description: 'Traditional anonymization methods',
-      techniques: [
-        { name: 'Suppression', applied: true, impact: 'Low utility loss' },
-        { name: 'Generalization', applied: true, impact: 'Medium utility loss' },
-        { name: 'Noise Addition', applied: false, impact: 'Variable utility loss' }
-      ],
-      parameters: {
-        kAnonymity: 5,
-        lDiversity: 3,
-        suppressionThreshold: 0.05
-      }
-    },
     DIFFERENTIAL: {
       name: 'Differential Privacy',
       description: 'Mathematically provable privacy guarantee',
